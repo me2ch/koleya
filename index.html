@@ -1055,16 +1055,14 @@
     }
     
     .nav-indicator {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      z-index: 1000;
-      background: var(--gradient-primary);
-      transform-origin: left;
-      transform: scaleX(0);
-      transition: transform 0.5s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    z-index: 1000;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    width: 0;
     }
     
     .section-nav {
@@ -1688,7 +1686,7 @@
           <div class="slider-dot" data-slide="2"></div>
           <div class="slider-dot" data-slide="3"></div>
         </div>
-      </div>
+      </section>
   
   <!-- Portfolio Section -->
   <section class="section" id="portfolio" style="background: #080808;">
@@ -2261,34 +2259,58 @@
     setInterval(nextSlide, 20000);
     
     // Navigation highlighting
-    const sections = document.querySelectorAll('.section, .hero');
+    // Убедитесь, что все основные секции включены
+    const sections = document.querySelectorAll('.hero, .expertise, .projects-slider, #portfolio, .skills-matrix, .about-section, .contact-section');
     const navLinks = document.querySelectorAll('.nav-link');
     const navIndicator = document.querySelector('.nav-indicator');
     
     function updateNav() {
-      let currentSection = '';
+      const scrollPos = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      let currentSection = 'hero';
       
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-          currentSection = section.getAttribute('id');
-        }
-      });
-      
+      // Если скролл в самом низу страницы
+      if (scrollPos + viewportHeight >= documentHeight - 100) {
+        currentSection = 'contact';
+      } 
+      // Обработка hero-секции
+      else if (scrollPos < viewportHeight * 0.7) {
+        currentSection = 'hero';
+      } 
+      // Проверяем все остальные секции
+      else {
+        sections.forEach(section => {
+          const sectionId = section.getAttribute('id');
+          if (!sectionId || sectionId === 'hero') return;
+          
+          const sectionTop = section.offsetTop - 100;
+          const sectionBottom = sectionTop + section.offsetHeight;
+          
+          if (scrollPos >= sectionTop && scrollPos < sectionBottom) {
+            currentSection = sectionId;
+          }
+        });
+      }
+
+      // Обновляем активные пункты меню
       navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href').substring(1) === currentSection) {
+        const sectionId = link.getAttribute('href').substring(1);
+        if (sectionId === currentSection) {
           link.classList.add('active');
           
-          // Update navigation indicator
+          // ТОЧНЫЙ расчет позиции и ширины индикатора
           const linkRect = link.getBoundingClientRect();
           const navRect = document.querySelector('.section-nav').getBoundingClientRect();
           
-          navIndicator.style.transformOrigin = 'left';
-          navIndicator.style.transform = `scaleX(${linkRect.width / navRect.width})`;
-          navIndicator.style.left = `${linkRect.left - navRect.left}px`;
+          // Вычисляем относительную позицию
+          const relativeLeft = linkRect.left - navRect.left;
+          
+          // Обновляем индикатор
+          navIndicator.style.width = `${linkRect.width}px`;
+          navIndicator.style.left = `${navRect.left + relativeLeft}px`;
+        } else {
+          link.classList.remove('active');
         }
       });
     }
@@ -2299,13 +2321,13 @@
     document.querySelectorAll('.nav-link, .scroll-hint').forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
-        
         const targetId = this.getAttribute('href');
         const targetElement = document.querySelector(targetId);
-        
         if (targetElement) {
+          // Для hero раздела позиционируемся в самом верху
+          const offset = targetId === '#hero' ? 0 : 80;
           window.scrollTo({
-            top: targetElement.offsetTop - 80,
+            top: targetElement.offsetTop - offset,
             behavior: 'smooth'
           });
         }
@@ -2431,6 +2453,7 @@
     // Initialize on load
     document.addEventListener('DOMContentLoaded', function() {
       showSlide(0);
+      setTimeout(updateNav, 100);
       // Не вызываем updateNav() сразу — только при скролле
     });
     
@@ -2574,6 +2597,25 @@
 
       // Запускаем смену каждые 3 секунды
       setInterval(nextSlide, 3000);
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      showSlide(0);
+      // Принудительно обновляем навигацию при загрузке
+      updateNav();
+      
+      // Добавляем обработчик скролла для проверки hero-секции
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset === 0) {
+          document.querySelector('.nav-link[href="#hero"]').classList.add('active');
+          document.querySelector('.nav-link[href="#expertise"]').classList.remove('active');
+        }
+      });
+    });
+
+    // Обновляем позицию индикатора при изменении размера окна
+    window.addEventListener('resize', function() {
+      updateNav();
     });
   </script>
 </body>
