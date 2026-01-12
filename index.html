@@ -1764,6 +1764,54 @@
     .matrix-col h4 {
     font-size: 1.6rem;
     }
+
+    .social-toggle {
+      position: fixed;
+      bottom: 30px;
+      z-index: 1000;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(10, 10, 10, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--accent-blue);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .social-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 92, 201, 0.4);
+    }
+
+    #vkToggle {
+      left: 30px;
+    }
+
+    #tgToggle {
+      left: 100px;
+    }
+
+    /* Центрируем иконку внутри круга */
+    .social-icon-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      text-decoration: none;
+      color: var(--accent-blue);
+      font-size: 25px; /* Размер иконки */
+      transition: color 0.3s ease;
+    }
+
+    .social-icon-link:hover {
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -3037,5 +3085,17 @@
       });
     });
   </script>
+
+<!-- Social buttons (left bottom) -->
+<div class="social-toggle" id="vkToggle">
+  <a href="https://vk.com/ittsu_rut" target="_blank" rel="noopener" class="social-icon-link">
+    <i class="fab fa-vk"></i>
+  </a>
+</div>
+<div class="social-toggle" id="tgToggle">
+  <a href="https://t.me/ittsu_rut" target="_blank" rel="noopener" class="social-icon-link">
+    <i class="fab fa-telegram-plane"></i>
+  </a>
+</div>
 </body>
 </html>
