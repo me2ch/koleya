@@ -497,12 +497,13 @@
     }
     
     .matrix-col {
-      background: rgba(30, 30, 30, 0.5);
-      border-radius: var(--border-radius);
-      padding: 30px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      transition: var(--transition);
+    background: rgba(30, 30, 30, 0.5);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: var(--transition);
+    overflow: hidden; /* Это важно! */
     }
     
     .matrix-col:hover {
@@ -511,36 +512,48 @@
     }
     
     .matrix-col h4 {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
-      color: var(--accent-blue);
-      position: relative;
-      padding-bottom: 10px;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: var(--accent-blue);
+    position: relative;
+    padding-bottom: 10px;
+    word-wrap: break-word;
     }
-    
     .matrix-col h4::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 50px;
-      height: 3px;
-      background: var(--accent-blue);
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent-blue);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+    }
+    .matrix-col:hover h4::after {
+    transform: scaleX(1);
     }
     
     .matrix-col ul {
-      list-style: none;
+    list-style: none;
+    max-height: 245px; /* Уменьшаем на 15px для более чистого обрезания */
+    overflow-y: auto;
+    padding-right: 10px;
+    margin: 0; /* Убираем возможные отступы */
+    padding: 0; /* Убираем возможные отступы */
     }
-    
     .matrix-col li {
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 1.1rem;
-      transition: var(--transition);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 1.1rem;
+    transition: var(--transition);
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start; /* Выравниваем по верху */
+    gap: 10px;
+    word-break: break-word; /* Обеспечивает перенос длинных слов */
+    margin: 0; /* Убираем возможные отступы */
     }
     
     .matrix-col li::before {
@@ -1518,6 +1531,239 @@
     .team-member:hover .member-img img {
       transform: scale(1.05); /* лёгкий zoom при наведении */
     }
+
+
+
+    /* Cover Flow styles */
+    .cover-flow-container {
+      position: relative;
+      overflow: hidden;
+      margin-top: 50px;
+      perspective: 1200px;
+      height: 550px;
+      width: 100%;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 0 40px; /* Уменьшаем боковые отступы */
+      clip-path: inset(0); /* Гарантируем обрезку всего, что выходит за границы */
+    }
+
+    /* Добавляем маскировку по краям для плавного скрытия */
+    .cover-flow-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 60px; /* Ширина зоны скрытия */
+
+      pointer-events: none; /* Чтобы не мешали кликам */
+    }
+
+    .cover-flow-container::before {
+      left: 0;
+      background: linear-gradient(to right, var(--primary-black), transparent);
+    }
+
+    .cover-flow-container::after {
+      right: 0;
+      background: linear-gradient(to left, var(--primary-black), transparent);
+    }
+
+    .cover-flow-track {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease;
+        position: relative;
+        width: 100%;
+    }
+
+    .cover-flow-item {
+        position: absolute;
+        width: 280px;
+        height: 420px;
+        background: rgba(30, 30, 30, 0.5);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        display: flex;
+        flex-direction: column;
+        backface-visibility: hidden;
+    }
+
+    .cover-flow-item .member-img {
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #1a1a1a;
+        position: relative;
+    }
+
+    .cover-flow-item .member-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .cover-flow-item:hover .member-img img {
+        transform: scale(1.05);
+    }
+
+    .cover-flow-item .member-info {
+        padding: 20px;
+        text-align: center;
+        background: rgba(10, 10, 10, 0.85);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .cover-flow-item h3 {
+        font-size: 1.4rem;
+        margin-bottom: 5px;
+        color: var(--cream-light);
+        transition: color 0.3s ease;
+    }
+
+    .cover-flow-item .member-role {
+        color: var(--accent-blue);
+        font-weight: 500;
+        margin-bottom: 15px;
+        display: block;
+        transition: color 0.3s ease;
+    }
+
+    .cover-flow-item .member-quote {
+        color: #ccc;
+        font-style: italic;
+        position: relative;
+        padding-left: 20px;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+
+    .cover-flow-nav {
+      position: absolute;
+      bottom: 5px; /* Увеличиваем отступ снизу */
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      pointer-events: none; /* Чтобы стрелки не мешали наведению на карточки */
+    }
+
+    .cover-flow-item {
+      will-change: transform, opacity, z-index;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .cover-flow-track {
+      will-change: transform;
+    }
+
+    .cover-flow-nav button {
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.4rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 31;
+        pointer-events: auto;
+    }
+
+    .cover-flow-nav button:hover {
+        background: var(--accent-blue);
+        transform: scale(1.15);
+        box-shadow: 0 0 15px rgba(0, 92, 201, 0.8);
+    }
+
+    /* Адаптивность для Cover Flow */
+    @media (max-width: 1200px) {
+        .cover-flow-container {
+            padding: 0 60px;
+        }
+        .cover-flow-item {
+            width: 260px;
+            height: 400px;
+        }
+        .cover-flow-item .member-img {
+            height: 230px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .cover-flow-container {
+            padding: 0 40px;
+            height: 500px;
+        }
+        .cover-flow-item {
+            width: 240px;
+            height: 380px;
+        }
+        .cover-flow-item .member-img {
+            height: 210px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .cover-flow-container {
+            padding: 0 30px;
+            height: 450px;
+        }
+        .cover-flow-item {
+            width: 220px;
+            height: 350px;
+        }
+        .cover-flow-item .member-img {
+            height: 190px;
+        }
+        .cover-flow-nav button {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .cover-flow-container {
+            padding: 0 20px;
+            height: 400px;
+        }
+        .cover-flow-item {
+            width: 190px;
+            height: 320px;
+        }
+        .cover-flow-item .member-img {
+            height: 160px;
+        }
+    }
+
+    .matrix-col h4 {
+    font-size: 1.6rem;
+    }
   </style>
 </head>
 <body>
@@ -1676,7 +1922,7 @@
             <span class="tag">Образовательный проект</span>
             <h3>Медиамарафон</h3>
             <p>Двухнедельный интенсив по медиапроизводству для студентов с практическими заданиями и финальной презентацией проектов</p>
-            <button class="play-btn"><i class="fas fa-play"></i> Следующий: октябрь 2025</button>
+            <button class="play-btn"><i class="fas fa-play"></i> Собрали: 200 студентов</button>
           </div>
         </div>
 
@@ -1749,15 +1995,14 @@
           <ul>
             <li>DaVinci Resolve</li>
             <li>FL Studio</li>
-            <li>Capture One</li>
-            <li>Adobe Creative Suite</li>
+            <li>Пакет Adobe</li>
             <li>Сценарное мастерство</li>
           </ul>
         </div>
         <div class="matrix-col fade-in">
-          <h4>Организационные</h4>
+          <h4>Управление</h4>
           <ul>
-            <li>Медиапланирование</li>
+            <li>Контент-план</li>
             <li>Логистика мероприятий</li>
             <li>Координация команды</li>
             <li>Работа с партнерами</li>
@@ -1776,69 +2021,86 @@
         </div>
       </div>
       
-      <div class="team-grid">
-        <div class="team-member fade-in">
-          <div class="member-img">
-            <img src="images/team/stanislav.jpeg" alt="Станислав Мочалин">
+      <div class="cover-flow-container">
+        <div class="cover-flow-track">
+          <!-- Станислав Мочалин -->
+          <div class="cover-flow-item">
+            <div class="member-img">
+              <img src="images/team/stanislav.jpeg" alt="Станислав Мочалин">
+            </div>
+            <div class="member-info">
+              <h3>Станислав Мочалин</h3>
+              <span class="member-role">Руководитель</span>
+              <p class="member-quote">«Я админ»</p>
+            </div>
           </div>
-          <div class="member-info">
-            <h3>Станислав Мочалин</h3>
-            <span class="member-role">Руководитель</span>
-            <p class="member-quote">«Наша сила — в командной работе и профессиональном подходе к каждому проекту»</p>
+          
+          <!-- Александр Чумак -->
+          <div class="cover-flow-item">
+            <div class="member-img">
+              <img src="images/team/alexander.jpeg" alt="Александр Чумак">
+            </div>
+            <div class="member-info">
+              <h3>Александр Чумак</h3>
+              <span class="member-role">Фотограф</span>
+              <p class="member-quote">«Да я фотограф и у меня нет своего фото»</p>
+            </div>
+          </div>
+          
+          <!-- Федор Пушкин -->
+          <div class="cover-flow-item">
+            <div class="member-img">
+              <img src="images/team/fedor.jpeg" alt="Федор Пушкин">
+            </div>
+            <div class="member-info">
+              <h3>Федор Пушкин</h3>
+              <span class="member-role">Звукорежиссер</span>
+              <p class="member-quote">«Бр бр битбокс типа»</p>
+            </div>
+          </div>
+          
+          <!-- Тигран Степанян -->
+          <div class="cover-flow-item">
+            <div class="member-img">
+              <img src="images/team/tigran.jpeg" alt="Тигран Степанян">
+            </div>
+            <div class="member-info">
+              <h3>Тигран Степанян</h3>
+              <span class="member-role">Видеограф</span>
+              <p class="member-quote">«Люблю золото, мрамор и конечно Ваню»</p>
+            </div>
+          </div>
+          
+          <!-- Анастасия Лобанова -->
+          <div class="cover-flow-item">
+            <div class="member-img">
+              <img src="images/team/anastasia.jpeg" alt="Анастасия Лобанова">
+            </div>
+            <div class="member-info">
+              <h3>Анастасия Лобанова</h3>
+              <span class="member-role">SMM и Дизайнер</span>
+              <p class="member-quote">«Делаю дизайн типа»</p>
+            </div>
+          </div>
+          
+          <!-- Дилара Рахматуллина -->
+          <div class="cover-flow-item">
+            <div class="member-img">
+              <img src="images/team/dilara.jpeg" alt="Дилара Рахматуллина">
+            </div>
+            <div class="member-info">
+              <h3>Дилара Рахматуллина</h3>
+              <span class="member-role">Вайб персона</span>
+              <p class="member-quote">«Suuuuck my dick»</p>
+            </div>
           </div>
         </div>
-        <div class="team-member fade-in">
-          <div class="member-img">
-            <i class="fas fa-camera"></i>
-          </div>
-          <div class="member-info">
-            <h3>Александр Чумак</h3>
-            <span class="member-role">Фотограф</span>
-            <p class="member-quote">«Каждый кадр должен рассказывать историю»</p>
-          </div>
+        
+        <div class="cover-flow-nav">
+          <button class="cover-flow-prev"><i class="fas fa-chevron-left"></i></button>
+          <button class="cover-flow-next"><i class="fas fa-chevron-right"></i></button>
         </div>
-        <div class="team-member fade-in">
-          <div class="member-img">
-            <i class="fas fa-microphone"></i>
-          </div>
-          <div class="member-info">
-            <h3>Федор Пушкин</h3>
-            <span class="member-role">Звукорежиссер</span>
-            <p class="member-quote">«Хороший звук — половина успеха любого медиа»</p>
-          </div>
-        </div>
-        <div class="team-member fade-in">
-          <div class="member-img">
-            <img src="images/team/tigran.jpeg" alt="Тигран Степанян">
-          </div>
-          <div class="member-info">
-            <h3>Тигран Степанян</h3>
-            <span class="member-role">Видеограф</span>
-            <p class="member-quote">«Люблю золото и мрамор ну и Ваню»</p>
-          </div>
-        </div>
-        <div class="team-member fade-in">
-          <div class="member-img">
-            <img src="images/team/anastasia.jpeg" alt="Анастасия Лобанова">
-          </div>
-          <div class="member-info">
-            <h3>Анастасия Лобанова</h3>
-            <span class="member-role">SMM и Дизайнер</span>
-            <p class="member-quote">«Хороший пост это круто»</p>
-          </div>
-        </div>
-        <div class="team-member fade-in">
-          <div class="member-img">
-            <img src="images/team/dilara.git remote set-url origin git@github.com:me2ch/koleya.gitjpeg" alt="Дилара Рахматуллина">
-          </div>
-          <div class="member-info">
-            <h3>Дилара Рахматуллина</h3>
-            <span class="member-role">SMM и Дизайнер</span>
-            <p class="member-quote">«Хороший пост это круто»</p>
-          </div>
-      </div>      
-      <a href="#" class="btn btn-primary cta-btn fade-in" id="historyBtn" data-bs-toggle="modal" data-bs-target="#historyModal">Полная история</a>
-    </div>
+      </div>
   </section>
   
   <!-- About Section -->
@@ -1847,6 +2109,7 @@
       <div class="section-header fade-in">
         <h2>История <span class="accent">пресc-центра</span></h2>
         <p>Как студенческая инициатива превратилась в профессиональный медиапродакшен</p>
+        <a href="#" class="btn btn-primary cta-btn" id="historyBtn" data-bs-toggle="modal" data-bs-target="#historyModal" style="margin-top: 20px;">Полная история</a>
       </div>
       
       <div class="timeline">
@@ -1939,8 +2202,8 @@
             <a href="https://vk.com/stas_m02" class="social-link" target="_blank">
               <i class="fab fa-vk"></i>
             </a>
-            <a href="https://vk.com/im?sel=-174108419" class="social-link" target="_blank" title="VK Мессенджер">
-              <i class="fas fa-comment-dots"></i>
+            <a href="https://max.ru/stas_m02" class="social-link" target="_blank" title="VK Мессенджер">
+              <img src="images/max.png" alt="max" style="width: 25px; height: 25px;">
             </a>
           </div>
         </div>
@@ -2014,8 +2277,8 @@
           <a href="https://vk.com/stas_m02" class="social-link fade-in" target="_blank">
             <i class="fab fa-vk"></i>
           </a>
-          <a href="https://vk.com/im?sel=-174108419" class="social-link fade-in" target="_blank" title="VK Мессенджер">
-            <i class="fas fa-comment-dots"></i>
+          <a href="https://max.ru/stas_m02" class="social-link fade-in" target="_blank" title="VK Мессенджер">
+            <img src="images/max.png" alt="max" style="width: 25px; height: 25px;">
           </a>
         </div>
         
@@ -2616,6 +2879,162 @@
     // Обновляем позицию индикатора при изменении размера окна
     window.addEventListener('resize', function() {
       updateNav();
+    });
+
+    // Cover Flow functionality - полностью переписанная версия
+    document.addEventListener('DOMContentLoaded', function() {
+      const coverFlowTrack = document.querySelector('.cover-flow-track');
+      const items = document.querySelectorAll('.cover-flow-item');
+      const prevBtn = document.querySelector('.cover-flow-prev');
+      const nextBtn = document.querySelector('.cover-flow-next');
+      
+      if (!coverFlowTrack || items.length === 0) return;
+      
+      const totalItems = items.length;
+      let currentIndex = 0;
+      const visibleItems = 5;
+      const baseRotation = 30;
+      const baseScale = 0.65;
+      const spacing = 220;
+      let autoSlideInterval;
+      let isAnimating = false;
+      
+      // Функция плавного обновления позиций элементов
+      function updateCoverFlow(animate = true) {
+        if (isAnimating && animate) return;
+        
+        if (animate) {
+          isAnimating = true;
+          setTimeout(() => {
+            isAnimating = false;
+          }, 600); // Длительность анимации
+        }
+        
+        items.forEach((item, index) => {
+          // Вычисляем расстояние от текущего центрального элемента
+          let distance = (index - currentIndex + totalItems) % totalItems;
+          if (distance > totalItems / 2) {
+            distance = distance - totalItems;
+          }
+          
+          // Вычисляем параметры для каждого элемента
+          const absDistance = Math.abs(distance);
+          const scale = Math.max(baseScale, 1 - absDistance * 0.15);
+          const opacity = Math.max(0.5, 1 - absDistance * 0.18);
+          const zIndex = 100 - absDistance;
+          const rotation = -distance * (baseRotation / (visibleItems/2));
+          const translateX = distance * spacing;
+          
+          // Устанавливаем стили с учетом анимации
+          item.style.transition = animate ? 
+            'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.6s ease, z-index 0.6s ease' : 
+            'none';
+          
+          item.style.transform = `
+            translateX(${translateX}px)
+            translateZ(${150 - absDistance * 50}px)
+            rotateY(${rotation}deg)
+            scale(${scale})
+          `;
+          
+          item.style.opacity = opacity;
+          item.style.zIndex = zIndex;
+          item.classList.toggle('active', index === currentIndex);
+        });
+      }
+      
+      // Функция перехода к следующему элементу
+      function nextItem() {
+        if (isAnimating) return;
+        currentIndex = (currentIndex + 1) % totalItems;
+        updateCoverFlow();
+      }
+      
+      // Функция перехода к предыдущему элементу
+      function prevItem() {
+        if (isAnimating) return;
+        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+        updateCoverFlow();
+      }
+      
+      // Навигация при клике на элемент
+      items.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          if (isAnimating || index === currentIndex) return;
+          
+          // Если кликнут не центральный элемент, перемещаем его в центр
+          if (Math.abs(index - currentIndex) > totalItems / 2) {
+            // Выбираем кратчайший путь для циклического перемещения
+            if (index < currentIndex) {
+              currentIndex = index + totalItems;
+            } else {
+              currentIndex = index - totalItems;
+            }
+          } else {
+            currentIndex = index;
+          }
+          
+          updateCoverFlow();
+        });
+        
+        // Оптимизация при наведении (убираем дергание)
+        item.addEventListener('mouseenter', () => {
+          if (index === currentIndex || isAnimating) return;
+          item.style.zIndex = '110';
+          item.style.transform = item.style.transform.replace('scale(1)', 'scale(1.02)');
+        });
+        
+        item.addEventListener('mouseleave', () => {
+          if (index === currentIndex || isAnimating) return;
+          item.style.zIndex = '';
+          item.style.transform = item.style.transform.replace('scale(1.02)', 'scale(1)');
+        });
+      });
+      
+      // Обработчики кнопок
+      if (prevBtn) prevBtn.addEventListener('click', prevItem);
+      if (nextBtn) nextBtn.addEventListener('click', nextItem);
+      
+      // Автоматическая прокрутка
+      function startAutoSlide() {
+        autoSlideInterval = setInterval(nextItem, 6000);
+      }
+      
+      function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+      }
+      
+      // Инициализация
+      updateCoverFlow(false); // Без анимации при первой загрузке
+      
+      // Запускаем автопрокрутку
+      startAutoSlide();
+      
+      // Остановка автопрокрутки при взаимодействии
+      coverFlowTrack.addEventListener('mouseenter', stopAutoSlide);
+      coverFlowTrack.addEventListener('mouseleave', startAutoSlide);
+      
+      // Обработка кликов по стрелкам
+      if (prevBtn) prevBtn.addEventListener('click', () => {
+        stopAutoSlide();
+        prevItem();
+        setTimeout(startAutoSlide, 6500);
+      });
+      
+      if (nextBtn) nextBtn.addEventListener('click', () => {
+        stopAutoSlide();
+        nextItem();
+        setTimeout(startAutoSlide, 6500);
+      });
+      
+      // Адаптивность
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          updateCoverFlow(false);
+        }, 100);
+      });
     });
   </script>
 </body>
